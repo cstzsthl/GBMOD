@@ -6,20 +6,35 @@ Outlier detection is a crucial data mining task involving identifying abnormal o
 
 ## Usage
 You can run GBMOD.py:
+```
+data_path = "./Example.mat"
+trandata = io.loadmat(data_path)['data']
+
+oridata = trandata.copy()
+trandata = trandata.astype(float)
+
+scaler = MinMaxScaler()
+trandata[:] = scaler.fit_transform(trandata[:])
+X = trandata[:]
+centers, gb_list, gb_weight = GB.getGranularBall(X)
+index = []
+for gb in gb_list:
+    index.append(gb[:, -1])
+
+k = 3
+detector = MS(centers, X, index, k)
+out_scores = detector.GBMOD()
+out_scores = column_or_1d(out_scores)
+```
 
 You can get outputs as follows:
 ```
 anomaly_scores =
-    1.3717
-    1.2816
-    1.4044
-    1.3226
-    1.3673
-    1.1867
-    1.5351
-    1.4129
-    1.1125
-    1.5381
+0.974 0.939 1.042 1.039 1.078 0.057 0.016 0.039 0.047 0.061
+0.124 0.042 0.135 0.054 0.116 0.016 0.126 0.043 0.089 0.039
+0.089 0.148 0.036 0.063 0.049 0.070 0.078 0.015 0.020 0.027
+0.024 0.109 0.049 0.062 0.010 0.017 0.078 0.048 0.032 0.044
+0.069 0.098 0.130 0.026 0.086 0.054 0.026 0.019 0.079 0.014
 ```
 
 ## Citation
