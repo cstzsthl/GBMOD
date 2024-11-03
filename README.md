@@ -40,7 +40,13 @@ anomaly_scores =
 ## Citation
 If you find GBMOD useful in your research, please consider citing:
 ```
-@article{
+@article{cheng2024gbmod,
+  title={GBMOD: A granular-ball mean-shift outlier detector},
+  author={Cheng, Shitong and Su, Xinyu and Chen, Baiyang and Chen, Hongmei and Peng, Dezhong and Yuan, Zhong},
+  journal={Pattern Recognition},
+  pages={111115},
+  year={2024},
+  publisher={Elsevier}
 }
 ```
 ## Contact
