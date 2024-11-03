@@ -87,44 +87,26 @@ class MS:
 
 
 
-data_path = "./datasets/bands_band_34_variant1.mat"
-trandata = io.loadmat(data_path)['trandata']
-
+data_path = "./Example.mat"
+trandata = io.loadmat(data_path)['data']
 
 oridata = trandata.copy()
 trandata = trandata.astype(float)
-ID = (trandata >= 1).all(axis=0) & (trandata.max(axis=0) != trandata.min(axis=0))
-scaler = MinMaxScaler()
-if any(ID):
-    trandata[:, ID] = scaler.fit_transform(trandata[:, ID])
 
-X = trandata[:, 0:-1]
-labels = trandata[:, -1]
-print(X.shape, labels.shape)
-opt_k = 1
-opt_AUC = 0
+scaler = MinMaxScaler()
+trandata[:] = scaler.fit_transform(trandata[:])
+
+X = trandata[:]
 
 centers, gb_list, gb_weight = GB.getGranularBall(X)
 index = []
 for gb in gb_list:
     index.append(gb[:, -1])
 
-for k in range(2, 61):
-    try:
-        detector = MS(centers, X, index, k)
-        out_scores = detector.GBMOD()
-    except ValueError as e:
-        continue
-    end = time.time()
-    labels = column_or_1d(labels)
-    out_scores = column_or_1d(out_scores)
-    print(out_scores.shape)
-    check_consistent_length(labels, out_scores)
+k = 3
+detector = MS(centers, X, index, k)
+out_scores = detector.GBMOD()
 
-    AUC = roc_auc_score(labels, out_scores)
-    if AUC > opt_AUC:
-        opt_AUC = AUC
-        opt_out_scores = out_scores
-        opt_k = k
-print('opt_AUC=', opt_AUC)
-
+out_scores = column_or_1d(out_scores)
+for score in out_scores:
+    print(score)
